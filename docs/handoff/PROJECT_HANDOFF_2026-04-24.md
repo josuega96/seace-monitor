@@ -8,9 +8,9 @@
 - Flujo batch validado (`POST /api/batch` inicia proceso y `/api/batch/status` reporta avance/finalizacion).
 
 ## 2) Hallazgos de repositorio
-- No existe carpeta `.git` en este workspace.
-- Impacto: no se puede reconstruir historial de bugs por commits/tags/PRs.
-- Se reconstruyo historial tecnico desde logs y comportamiento actual.
+- Git inicializado en este workspace (rama `main`).
+- Existe commit base de reorganizacion multi-agente y GTD.
+- El historial previo a esta inicializacion sigue sin trazabilidad de commits antiguos.
 
 ## 3) Historial de bugs/incidentes (evidencia local)
 
