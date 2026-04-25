@@ -1,0 +1,28 @@
+name: SEACE Scraper
+
+on:
+  schedule:
+    - cron: '0 12 * * *'  # 7am Lima (UTC-5) = 12pm UTC
+  workflow_dispatch:        # permite correrlo manualmente
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright
+        run: npx playwright install chromium --with-deps
+
+      - name: Run scraper
+        run: node -e "const { runJob } = require('./src/jobs/scraperJob'); runJob({ maxPages: 5 }).then(r => { console.log(r); process.exit(0); }).catch(e => { console.error(e); process.exit(1); })"
+        env:
+          NODE_ENV: production
