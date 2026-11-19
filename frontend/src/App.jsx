@@ -1,4 +1,4 @@
-﻿import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8080";
 
@@ -12,18 +12,18 @@ const ESTADO_COLORS = {
   "En curso": "badge-amber",
 };
 
-const TABS = ["BÃšSQUEDA", "SEGUIMIENTO", "LOTE EXCEL", "ANÃLISIS IA"];
+const TABS = ["BÚSQUEDA", "SEGUIMIENTO", "LOTE EXCEL", "ANÁLISIS IA"];
 
 const TIPOS = [
   "",
-  "LicitaciÃ³n PÃºblica",
-  "Concurso PÃºblico",
-  "AdjudicaciÃ³n Simplificada",
+  "Licitación Pública",
+  "Concurso Público",
+  "Adjudicación Simplificada",
   "Subasta Inversa",
-  "ComparaciÃ³n de Precios",
+  "Comparación de Precios",
 ];
 
-const OBJETOS = ["", "Bienes", "Servicios", "Obras", "ConsultorÃ­a de Obra"];
+const OBJETOS = ["", "Bienes", "Servicios", "Obras", "Consultoría de Obra"];
 
 const REGIONES = [
   "Amazonas",
@@ -91,7 +91,7 @@ function trackingId(item) {
 }
 
 export default function App() {
-  const [tab, setTab] = useState("BÃšSQUEDA");
+  const [tab, setTab] = useState("BÚSQUEDA");
   const [backendOk, setBackendOk] = useState(false);
   const [headless, setHeadless] = useState(true);
   const [logs, setLogs] = useState([]);
@@ -101,7 +101,7 @@ export default function App() {
   const [filters, setFilters] = useState({
     entidad: "",
     tipo: "",
-    objeto: "ConsultorÃ­a de Obra",
+    objeto: "Consultoría de Obra",
     regiones: [],
     anio: "",
     max_pages: 3,
@@ -187,7 +187,7 @@ export default function App() {
   async function runSearch(e) {
     e.preventDefault();
     if (!searchQueries.length) {
-      setSearchError("Agrega al menos una bÃºsqueda compuesta para ejecutar la consulta.");
+      setSearchError("Agrega al menos una búsqueda compuesta para ejecutar la consulta.");
       return;
     }
     setSearching(true);
@@ -207,10 +207,10 @@ export default function App() {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Error en bÃºsqueda");
+      if (!res.ok) throw new Error(data.error || "Error en búsqueda");
       setResults(Array.isArray(data) ? data : []);
     } catch (err) {
-      setSearchError(err.message || "No se pudo completar la bÃºsqueda");
+      setSearchError(err.message || "No se pudo completar la búsqueda");
     } finally {
       setSearching(false);
     }
@@ -234,7 +234,7 @@ export default function App() {
 
   async function analyzeItem(item) {
     setSelectedItem(item);
-    setTab("ANÃLISIS IA");
+    setTab("ANÁLISIS IA");
     setAnalysisLoading(true);
     setAnalysisError("");
     setAnalysis("");
@@ -248,7 +248,7 @@ export default function App() {
       if (!res.ok) throw new Error(data.error || "No se pudo analizar");
       setAnalysis(data.analysis || "");
     } catch (err) {
-      setAnalysisError(err.message || "Error en anÃ¡lisis IA");
+      setAnalysisError(err.message || "Error en análisis IA");
     } finally {
       setAnalysisLoading(false);
     }
@@ -472,12 +472,12 @@ export default function App() {
             <table>
               <thead>
                 <tr>
-                  <th>DescripciÃƒÂ³n / Nomenclatura</th>
+                  <th>Descripción / Nomenclatura</th>
                   <th>Entidad</th>
                   <th>Tipo</th>
-                  <th>VR / VE / CuantÃƒÂ­a</th>
+                  <th>VR / VE / Cuantía</th>
                   <th>Fecha</th>
-                  <th>AcciÃƒÂ³n</th>
+                  <th>Acción</th>
                 </tr>
               </thead>
               <tbody>
@@ -537,7 +537,7 @@ export default function App() {
                 {!trackingItems.length && (
                   <tr>
                     <td colSpan={6} className="muted">
-                      AÃƒÂºn no tienes contratos en seguimiento.
+                      Aún no tienes contratos en seguimiento.
                     </td>
                   </tr>
                 )}
@@ -578,18 +578,18 @@ export default function App() {
             ))}
           </nav>
 
-          {tab === "BÃšSQUEDA" && (
+          {tab === "BÚSQUEDA" && (
             <section className="card">
               <form className="grid-form" onSubmit={runSearch}>
                 <label>
-                  Crear bÃºsquedas compuestas
+                  Crear búsquedas compuestas
                   <input
                     value={queryDescripcion}
                     onChange={(e) => setQueryDescripcion(e.target.value)}
                     placeholder="Ej: supervision"
                   />
                   <select value="" onChange={(e) => addQueryRegion(e.target.value)}>
-                    <option value="">Regiones para esta bÃºsqueda (vacÃ­o = todo PerÃº)</option>
+                    <option value="">Regiones para esta búsqueda (vacío = todo Perú)</option>
                     {REGIONES.map((r) => (
                       <option key={`draft-${r}`} value={r}>
                         {r}
@@ -604,18 +604,18 @@ export default function App() {
                         className="region-chip"
                         onClick={() => removeQueryRegion(region)}
                       >
-                        {region} Ã—
+                        {region} ×
                       </button>
                     ))}
                   </div>
                   <button type="button" className="btn-secondary" onClick={addSearchQuery}>
-                    Agregar bÃºsqueda
+                    Agregar búsqueda
                   </button>
                   <div className="query-list">
                     {searchQueries.map((q, idx) => (
                       <div key={`${q.descripcion}-${idx}`} className="query-item">
                         <span>
-                          {q.descripcion} â€” {q.regiones.length ? q.regiones.join(", ") : "Todo PerÃº"}
+                          {q.descripcion} — {q.regiones.length ? q.regiones.join(", ") : "Todo Perú"}
                         </span>
                         <button type="button" className="btn-danger" onClick={() => removeSearchQuery(idx)}>
                           Quitar
@@ -625,7 +625,7 @@ export default function App() {
                   </div>
                   {searchQueries.length > 0 && (
                     <span className="muted">
-                      Se usarÃ¡n estas bÃºsquedas compuestas y se consolidarÃ¡n en una sola lista.
+                      Se usarán estas búsquedas compuestas y se consolidarán en una sola lista.
                     </span>
                   )}
                 </label>
@@ -663,7 +663,7 @@ export default function App() {
                 <label>
                   Regiones objetivo
                   <select value="" onChange={(e) => addRegion(e.target.value)}>
-                    <option value="">Selecciona una regiÃ³n...</option>
+                    <option value="">Selecciona una región...</option>
                     {REGIONES.map((r) => (
                       <option key={r} value={r}>
                         {r}
@@ -679,13 +679,13 @@ export default function App() {
                         onClick={() => removeRegion(region)}
                         title={`Quitar ${region}`}
                       >
-                        {region} Ã—
+                        {region} ×
                       </button>
                     ))}
                   </div>
                 </label>
                 <label>
-                  AÃ±o
+                  Año
                   <select value={filters.anio} onChange={(e) => setFilters({ ...filters, anio: e.target.value })}>
                     {YEARS.map((x) => (
                       <option key={x || "all"} value={x}>
@@ -695,7 +695,7 @@ export default function App() {
                   </select>
                 </label>
                 <label>
-                  MÃ¡x. pÃ¡ginas
+                  Máx. páginas
                   <input
                     type="number"
                     min="1"
@@ -714,10 +714,10 @@ export default function App() {
                 <table>
                   <thead>
                     <tr>
-                      <th>DescripciÃ³n / Nomenclatura</th>
+                      <th>Descripción / Nomenclatura</th>
                       <th>Nombre o Sigla de la Entidad</th>
                       <th>Tipo</th>
-                      <th>VR / VE / CuantÃ­a de la contrataciÃ³n</th>
+                      <th>VR / VE / Cuantía de la contratación</th>
                       <th>Fecha</th>
                     </tr>
                   </thead>
@@ -766,7 +766,7 @@ export default function App() {
                                         : addToTracking(row)
                                     }
                                   >
-                                    {trackingIds.has(trackingId(row)) ? "Quitar interÃ©s" : "Me interesa"}
+                                    {trackingIds.has(trackingId(row)) ? "Quitar interés" : "Me interesa"}
                                   </button>
                                   <button className="btn-secondary" onClick={() => analyzeItem(row)}>
                                     Analizar con IA
@@ -781,7 +781,7 @@ export default function App() {
                     {!results.length && !searching && (
                       <tr>
                         <td colSpan={5} className="muted">
-                          Sin resultados aÃºn.
+                          Sin resultados aún.
                         </td>
                       </tr>
                     )}
@@ -808,7 +808,7 @@ export default function App() {
                   onDropFile(file);
                 }}
               >
-                <p>Arrastra y suelta CSV aquÃ­ (primera columna = nomenclaturas)</p>
+                <p>Arrastra y suelta CSV aquí (primera columna = nomenclaturas)</p>
                 <input
                   type="file"
                   accept=".csv,text/csv"
@@ -844,9 +844,9 @@ export default function App() {
             </section>
           )}
 
-          {tab === "ANÃLISIS IA" && (
+          {tab === "ANÁLISIS IA" && (
             <section className="card">
-              {!selectedItem && <p className="muted">Selecciona un procedimiento desde la pestaÃ±a BÃšSQUEDA.</p>}
+              {!selectedItem && <p className="muted">Selecciona un procedimiento desde la pestaña BÚSQUEDA.</p>}
               {selectedItem && (
                 <>
                   <h3>{selectedItem.nomenclatura || "Procedimiento seleccionado"}</h3>
@@ -854,7 +854,7 @@ export default function App() {
                   <div className="analysis-card">
                     {analysisLoading && <p>Analizando con Anthropic...</p>}
                     {analysisError && <p className="error-text">{analysisError}</p>}
-                    {!analysisLoading && !analysisError && <pre>{analysis || "Sin anÃ¡lisis disponible."}</pre>}
+                    {!analysisLoading && !analysisError && <pre>{analysis || "Sin análisis disponible."}</pre>}
                   </div>
                 </>
               )}
@@ -869,12 +869,12 @@ export default function App() {
                 <table>
                   <thead>
                     <tr>
-                      <th>DescripciÃ³n / Nomenclatura</th>
+                      <th>Descripción / Nomenclatura</th>
                       <th>Entidad</th>
                       <th>Tipo</th>
-                      <th>VR / VE / CuantÃ­a</th>
+                      <th>VR / VE / Cuantía</th>
                       <th>Fecha</th>
-                      <th>AcciÃ³n</th>
+                      <th>Acción</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -934,7 +934,7 @@ export default function App() {
                     {!trackingItems.length && (
                       <tr>
                         <td colSpan={6} className="muted">
-                          AÃºn no tienes contratos en seguimiento.
+                          Aún no tienes contratos en seguimiento.
                         </td>
                       </tr>
                     )}
